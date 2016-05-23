@@ -290,6 +290,7 @@ namespace velodyne_rawdata
     int azimuth_corrected;
     float x, y, z;
     float intensity;
+    uint32_t timestamp;
 
     const raw_packet_t *raw = (const raw_packet_t *) &pkt.data[0];
 
@@ -316,6 +317,10 @@ namespace velodyne_rawdata
 
       for (int firing=0, k=0; firing < VLP16_FIRINGS_PER_BLOCK; firing++){
         for (int dsr=0; dsr < VLP16_SCANS_PER_FIRING; dsr++, k+=RAW_SCAN_SIZE){
+          
+          /** Time Stamp **/
+          timestamp = raw->time+block*VLP16_BLOCK_TDURATION+firing*VLP16_FIRING_TOFFSET+dsr*VLP16_DSR_TOFFSET;
+
           velodyne_pointcloud::LaserCorrection &corrections = 
             calibration_.laser_corrections[dsr];
 
@@ -444,6 +449,7 @@ namespace velodyne_rawdata
               point.y = y_coord;
               point.z = z_coord;
               point.intensity = (uint8_t) intensity;
+              point.time = timestamp;
 
               pc.points.push_back(point);
               ++pc.width;

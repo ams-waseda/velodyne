@@ -75,6 +75,8 @@ namespace velodyne_pointcloud
     // publish the accumulated cloud message
     ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
                      << " Velodyne points, time: " << outMsg->header.stamp);
+
+    ROS_DEBUG_STREAM("GPS Time Stamp: " << outMsg->points[0].time);
     output_.publish(outMsg);
   }
 

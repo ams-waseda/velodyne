@@ -29,6 +29,7 @@ namespace velodyne_pointcloud
     PCL_ADD_POINT4D;                    // quad-word XYZ
     float    intensity;                 ///< laser intensity reading
     uint16_t ring;                      ///< laser ring number
+    uint32_t time;
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW     // ensure proper alignment
   } EIGEN_ALIGN16;
 
