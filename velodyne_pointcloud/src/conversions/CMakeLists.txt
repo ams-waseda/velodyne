@@ -1,3 +1,6 @@
+add_executable(laser_logger laser_logger.cc convert.cc)
+add_dependencies(laser_logger ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(laser_logger velodyne_rawdata
                       ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 add_executable(cloud_node cloud_node.cc convert.cc)
