@@ -319,7 +319,7 @@ namespace velodyne_rawdata
         for (int dsr=0; dsr < VLP16_SCANS_PER_FIRING; dsr++, k+=RAW_SCAN_SIZE){
           
           /** Time Stamp **/
-          timestamp = raw->time+block*VLP16_BLOCK_TDURATION+firing*VLP16_FIRING_TOFFSET+dsr*VLP16_DSR_TOFFSET;
+          timestamp = raw->time+(uint32_t)(block*VLP16_BLOCK_TDURATION+firing*VLP16_FIRING_TOFFSET+dsr*VLP16_DSR_TOFFSET);
 
           velodyne_pointcloud::LaserCorrection &corrections = 
             calibration_.laser_corrections[dsr];
