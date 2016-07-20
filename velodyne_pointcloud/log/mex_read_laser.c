@@ -41,7 +41,7 @@ extern void mexFunction(int nargout, mxArray *argout[], int nargin,
 	}
 	
 	while (fread(&laser,sizeof(laser_t),1,fp)>0) {
-		data[N*cnt+0]=(double)laser.time;
+		data[N*cnt+0]=(double)laser.time/1e6;
 		data[N*cnt+1]=(double)laser.cnt;
 		data[N*cnt+2]=(double)laser.i;
 		data[N*cnt+3]=(double)laser.x;
