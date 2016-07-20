@@ -27,9 +27,11 @@ namespace velodyne_pointcloud
   struct PointXYZIR
   {
     PCL_ADD_POINT4D;                    // quad-word XYZ
-    float    intensity;                 ///< laser intensity reading
-    uint16_t ring;                      ///< laser ring number
-    uint32_t time;
+    float    intensity;                 // laser intensity reading
+    uint16_t ring;                      // laser ring number
+    uint32_t time;                      // time stamp
+    uint8_t  firing;                    // firing number
+    float    azimuth;                   // azimuth (deg)
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW     // ensure proper alignment
   } EIGEN_ALIGN16;
 

@@ -324,7 +324,7 @@ namespace velodyne_rawdata
           velodyne_pointcloud::LaserCorrection &corrections = 
             calibration_.laser_corrections[dsr];
 
-          /** Position Calculation */
+          /** Position Calculation **/
           union two_bytes tmp;
           tmp.bytes[0] = raw->blocks[block].data[k];
           tmp.bytes[1] = raw->blocks[block].data[k+1];
@@ -450,6 +450,8 @@ namespace velodyne_rawdata
               point.z = z_coord;
               point.intensity = (uint8_t) intensity;
               point.time = timestamp;
+              point.firing = firing;
+              point.azimuth = azimuth_corrected_f;
 
               pc.points.push_back(point);
               ++pc.width;
