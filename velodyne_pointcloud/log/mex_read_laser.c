@@ -14,9 +14,9 @@ typedef struct {
 	float y;
 	float z;
 	float intensity;
-	uint16_t ring;
+	float ring;
 	float azimuth;
-	uint8_t firing;
+	float firing;
 } laser_t;
 
 extern void mexFunction(int nargout, mxArray *argout[], int nargin,

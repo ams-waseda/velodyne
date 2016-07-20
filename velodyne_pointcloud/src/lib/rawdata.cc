@@ -444,14 +444,14 @@ namespace velodyne_rawdata
     
               // append this point to the cloud
               VPoint point;
-              point.ring = corrections.laser_ring;
+              point.ring = (float)corrections.laser_ring;
               point.x = x_coord;
               point.y = y_coord;
               point.z = z_coord;
               point.intensity = (uint8_t) intensity;
               point.time = timestamp;
-              point.firing = firing;
-              point.azimuth = azimuth_corrected_f;
+              point.firing = (float)firing;
+              point.azimuth = azimuth_corrected_f/100;
 
               pc.points.push_back(point);
               ++pc.width;
