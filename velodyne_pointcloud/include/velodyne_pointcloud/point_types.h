@@ -30,8 +30,9 @@ namespace velodyne_pointcloud
     float    intensity;                 // laser intensity reading
     float ring;                         // laser ring number
     uint32_t time;                      // time stamp
-    float  firing;                      // firing number
+    float  mode;                        // dual/strong/last
     float    azimuth;                   // azimuth (deg)
+    float distance;                     // distance
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW     // ensure proper alignment
   } EIGEN_ALIGN16;
 

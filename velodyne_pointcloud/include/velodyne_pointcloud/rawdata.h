@@ -66,7 +66,10 @@ namespace velodyne_rawdata
   static const float  VLP16_BLOCK_TDURATION   = 110.592f;   // [µs]
   static const float  VLP16_DSR_TOFFSET       =   2.304f;   // [µs]
   static const float  VLP16_FIRING_TOFFSET    =  55.296f;   // [µs]
-  
+ 
+  static const int    VLP16_MODE_STRONGEST    = 1;
+  static const int    VLP16_MODE_LAST         = 2;
+  static const int    VLP16_MODE_DUAL         = 3;
 
   /** \brief Raw Velodyne data block.
    *

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "mex.h"
 
-#define N 10
+#define N 11
 #define M (1<<27)
 #define MAXDATA (M*N)
 
@@ -17,6 +17,7 @@ typedef struct {
 	float ring;
 	float azimuth;
 	float firing;
+	float distance;
 } laser_t;
 
 extern void mexFunction(int nargout, mxArray *argout[], int nargin,
@@ -51,9 +52,10 @@ extern void mexFunction(int nargout, mxArray *argout[], int nargin,
 		data[N*cnt+7]=(double)laser.ring;
 		data[N*cnt+8]=(double)laser.azimuth;
 		data[N*cnt+9]=(double)laser.firing;
+		data[N*cnt+10]=(double)laser.distance;
 		
 		if (cnt==0) {
-			mexPrintf("time:%d\n",laser.time);
+			mexPrintf("first timetag: %f[s]\n",(double)laser.time/1e6);
 		}
 		
 		cnt++;
