@@ -28,7 +28,8 @@ void laserconv(const VPointCloud::ConstPtr &msg)
     fout.write((char *)&msg->points[i].intensity,sizeof(float));
     fout.write((char *)&msg->points[i].ring,sizeof(float));
     fout.write((char *)&msg->points[i].azimuth,sizeof(float));
-    fout.write((char *)&msg->points[i].firing,sizeof(float));
+    fout.write((char *)&msg->points[i].mode,sizeof(float));
+    fout.write((char *)&msg->points[i].distance,sizeof(float));
   }
   cnt++;
 }
