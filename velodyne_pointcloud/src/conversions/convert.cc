@@ -13,7 +13,7 @@
 
 */
 
-#include "convert.h"
+#include "velodyne_pointcloud/convert.h"
 
 #include <pcl_conversions/pcl_conversions.h>
 
@@ -28,7 +28,7 @@ namespace velodyne_pointcloud
 
     // advertise output point cloud (before subscribing to input data)
     output_ =
-      node.advertise<sensor_msgs::PointCloud2>("velodyne_points_gps", 10);
+      node.advertise<sensor_msgs::PointCloud2>("velodyne_points", 10);
       
     srv_ = boost::make_shared <dynamic_reconfigure::Server<velodyne_pointcloud::
       CloudNodeConfig> > (private_nh);
@@ -59,25 +59,22 @@ namespace velodyne_pointcloud
       return;                                     // avoid much work
 
     // allocate a point cloud with same time and frame ID as raw data
-    velodyne_rawdata::VPointCloud::Ptr
-      outMsg(new velodyne_rawdata::VPointCloud());
+    PointcloudXYZIR outMsg;
     // outMsg's header is a pcl::PCLHeader, convert it before stamp assignment
-    outMsg->header.stamp = pcl_conversions::toPCL(scanMsg->header).stamp;
-    outMsg->header.frame_id = scanMsg->header.frame_id;
-    outMsg->height = 1;
+    outMsg.pc->header.stamp = pcl_conversions::toPCL(scanMsg->header).stamp;
+    outMsg.pc->header.frame_id = scanMsg->header.frame_id;
+    outMsg.pc->height = 1;
 
     // process each packet provided by the driver
     for (size_t i = 0; i < scanMsg->packets.size(); ++i)
-      {
-        data_->unpack(scanMsg->packets[i], *outMsg);
-      }
+    {
+      data_->unpack(scanMsg->packets[i], outMsg);
+    }
 
     // publish the accumulated cloud message
-    ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
-                     << " Velodyne points, time: " << outMsg->header.stamp);
-
-    ROS_DEBUG_STREAM("GPS Time Stamp: " << outMsg->points[0].time);
-    output_.publish(outMsg);
+    ROS_DEBUG_STREAM("Publishing " << outMsg.pc->height * outMsg.pc->width
+                     << " Velodyne points, time: " << outMsg.pc->header.stamp);
+    output_.publish(outMsg.pc);
   }
 
 } // namespace velodyne_pointcloud

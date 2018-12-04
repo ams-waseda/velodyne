@@ -27,14 +27,16 @@
 #include <math.h>
 
 #include <ros/ros.h>
-#include <pcl_ros/point_cloud.h>
 #include <velodyne_msgs/VelodyneScan.h>
-#include <velodyne_pointcloud/point_types.h>
 #include <velodyne_pointcloud/calibration.h>
+#include <velodyne_pointcloud/datacontainerbase.h>
+#include <pcl_ros/point_cloud.h>
+#include <velodyne_pointcloud/point_types.h>
+
 
 namespace velodyne_rawdata
 {
-  // Shorthand typedefs for point cloud representations
+    // Shorthand typedefs for point cloud representations
   typedef velodyne_pointcloud::PointXYZIR VPoint;
   typedef pcl::PointCloud<VPoint> VPointCloud;
 
@@ -46,15 +48,9 @@ namespace velodyne_rawdata
   static const int SCANS_PER_BLOCK = 32;
   static const int BLOCK_DATA_SIZE = (SCANS_PER_BLOCK * RAW_SCAN_SIZE);
 
-  static const float ROTATION_RESOLUTION = 0.01f; /**< degrees */
-  static const uint16_t ROTATION_MAX_UNITS = 36000; /**< hundredths of degrees */
+  static const float ROTATION_RESOLUTION      =     0.01f;  // [deg]
+  static const uint16_t ROTATION_MAX_UNITS    = 36000u;     // [deg/100]
 
-  /** According to Bruce Hall DISTANCE_MAX is 65.0, but we noticed
-   *  valid packets with readings up to 130.0. */
-  static const float DISTANCE_MAX = 130.0f;        /**< meters */
-  static const float DISTANCE_RESOLUTION = 0.002f; /**< meters */
-  static const float DISTANCE_MAX_UNITS = (DISTANCE_MAX
-                                           / DISTANCE_RESOLUTION + 1.0);
   /** @todo make this work for both big and little-endian machines */
   static const uint16_t UPPER_BANK = 0xeeff;
   static const uint16_t LOWER_BANK = 0xddff;
@@ -66,10 +62,10 @@ namespace velodyne_rawdata
   static const float  VLP16_BLOCK_TDURATION   = 110.592f;   // [µs]
   static const float  VLP16_DSR_TOFFSET       =   2.304f;   // [µs]
   static const float  VLP16_FIRING_TOFFSET    =  55.296f;   // [µs]
- 
-  static const int    VLP16_MODE_STRONGEST    = 1;
-  static const int    VLP16_MODE_LAST         = 2;
-  static const int    VLP16_MODE_DUAL         = 3;
+  
+  static const int    VLP16_MODE_STRONGEST    = 0x37;
+  static const int    VLP16_MODE_LAST         = 0x38;
+  static const int    VLP16_MODE_DUAL         = 0x39;
 
   /** \brief Raw Velodyne data block.
    *
@@ -141,7 +137,20 @@ namespace velodyne_rawdata
      */
     int setup(ros::NodeHandle private_nh);
 
-    void unpack(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc);
+    /** \brief Set up for data processing offline. 
+      * Performs the same initialization as in setup, in the abscence of a ros::NodeHandle.
+      * this method is useful if unpacking data directly from bag files, without passing 
+      * through a communication overhead.
+      * 
+      * @param calibration_file path to the calibration file
+      * @param max_range_ cutoff for maximum range
+      * @param min_range_ cutoff for minimum range
+      * @returns 0 if successful;
+      *           errno value for failure
+     */
+    int setupOffline(std::string calibration_file, double max_range_, double min_range_);
+
+    void unpack(const velodyne_msgs::VelodynePacket &pkt, DataContainerBase& data);
     
     void setParameters(double min_range, double max_range, double view_direction,
                        double view_width);
@@ -169,7 +178,7 @@ namespace velodyne_rawdata
     float cos_rot_table_[ROTATION_MAX_UNITS];
     
     /** add private function to handle the VLP16 **/ 
-    void unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc);
+    void unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt, DataContainerBase& data);
 
     /** in-line test whether a point is in range */
     bool pointInRange(float range)

@@ -14,7 +14,7 @@
     @author Jack O'Quin
 */
 
-#include "colors.h"
+#include "velodyne_pointcloud/colors.h"
 #include <velodyne_pointcloud/point_types.h>
 
 /// @todo make sure these includes are really necessary
@@ -80,7 +80,7 @@ namespace velodyne_pointcloud
         p.z = inMsg->points[i].z;
 
         // color lasers with the rainbow array
-        int color = (int)inMsg->points[i].ring % N_COLORS;
+        int color = inMsg->points[i].ring % N_COLORS;
         p.rgb = *reinterpret_cast<float*>(rainbow+color);
 
         outMsg->points.push_back(p);
